@@ -1,6 +1,8 @@
 import { Collection, Client, GatewayIntentBits, Message, TextChannel } from 'discord.js';
 import * as dotenv from 'dotenv';
 import dayjs from "dayjs";
+import { Cron } from "croner";
+
 import utc from "dayjs/plugin/utc.js";
 import timezone from "dayjs/plugin/timezone.js";
 import vi from "dayjs/locale/vi.js";
@@ -31,16 +33,18 @@ client.on('ready', () => {
     client.user?.setActivity('Reading data for calendar release books')
 });
 // const date = dayjs.tz().startOf("day");
-const date = dayjs.tz("2023-10-02", "YYYY-MM-DD", "Asia/Ho_Chi_Minh");
-
-client.on('messageCreate', async (message) => {
-
-    if (message.content == '!crawl') {
+// const date = dayjs.tz("2023-10-02", "YYYY-MM-DD", "Asia/Ho_Chi_Minh");
+Cron(
+    "0 6 * * *",
+    {
+        timezone: "Asia/Ho_Chi_Minh",
+    },
+    async () => {
+        const date = dayjs.tz().startOf("day");
         const response = await release(date);
         if (!response) return;
         const channel = client.channels.cache.get(channleAnouments) as TextChannel;
         if (channel) channel.send({ embeds: [response.embed] });
-    }
-});
-
+    },
+);
 client.login(process.env.discordToken || 'Your Token');
