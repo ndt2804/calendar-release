@@ -27,30 +27,18 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user?.tag}`);
     client.user?.setActivity('Reading data for calendar release books')
 });
-// const date1 = dayjs.tz().startOf("day");
-// console.log(date1);
-const date = dayjs.tz("2023-10-10", "YYYY-MM-DD", "Asia/Ho_Chi_Minh");
-
-client.on('messageCreate', async (message) => {
-
-    if (message.content == '!crawl') {
+Cron(
+    "0 6 * * *",
+    {
+        timezone: "Asia/Ho_Chi_Minh",
+    },
+    async () => {
+        const date = dayjs.tz().startOf("day");
         const response = await release(date);
         if (!response) return;
         const channel = client.channels.cache.get(channleAnouments) as TextChannel;
         if (channel) channel.send({ embeds: [response.embed] });
-    }
-});
-// Cron(
-//     "0 6 * * *",
-//     {
-//         timezone: "Asia/Ho_Chi_Minh",
-//     },
-//     async () => {
-//         const date = dayjs.tz().startOf("day");
-//         const response = await release(date);
-//         if (!response) return;
-//         const channel = client.channels.cache.get(channleAnouments) as TextChannel;
-//         if (channel) channel.send({ embeds: [response.embed] });
-//     },
-// );
+    },
+);
+
 client.login(process.env.discordToken || 'Your Token');
