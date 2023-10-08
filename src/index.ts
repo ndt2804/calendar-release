@@ -13,12 +13,7 @@ dayjs.extend(customParseFormat);
 dayjs.locale(vi);
 dayjs.tz.setDefault("Asia/Ho_Chi_Minh");
 dotenv.config();
-
-
-
 import { release } from "./services/data";
-
-
 if (!process.env.channleID)
     throw new Error("Releases channel is not defined.");
 const channleAnouments = process.env.channleID;
@@ -32,7 +27,8 @@ client.on('ready', () => {
     console.log(`Logged in as ${client.user?.tag}`);
     client.user?.setActivity('Reading data for calendar release books')
 });
-// const date = dayjs.tz().startOf("day");
+// const date1 = dayjs.tz().startOf("day");
+// console.log(date1);
 const date = dayjs.tz("2023-10-10", "YYYY-MM-DD", "Asia/Ho_Chi_Minh");
 
 client.on('messageCreate', async (message) => {
