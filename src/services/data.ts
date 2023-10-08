@@ -15,8 +15,15 @@ export async function getReleases(date: Dayjs): Promise<string[]> {
         if (id === dateString) {
             $(element).find('.group').each((i, index) => {
                 const title = $(index).find('.space-y-1 > div:nth-child(1)').text().trim();
+                const types = $(index).find('.inline-flex').text();
+
                 const volume = $(index).find('.space-y-1 > div:nth-child(2)').text().trim();
-                const books = `${title} - ${volume}`;
+                let books;
+                if (types) {
+                    books = `${title} - ${volume} - ${types}`;
+                } else {
+                    books = `${title} - ${volume}`;
+                }
                 result.push(books);
             });
         }
