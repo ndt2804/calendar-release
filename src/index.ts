@@ -7,11 +7,10 @@ import utc from "dayjs/plugin/utc.js";
 import timezone from "dayjs/plugin/timezone.js";
 import vi from "dayjs/locale/vi.js";
 import customParseFormat from "dayjs/plugin/customParseFormat.js";
-import { REST, Routes } from "discord.js";
-
-import command from './commands/release';
 import { Command } from './commands/type';
+import releaseCommand from './commands/release'
 
+import { register } from './utils/command';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(customParseFormat);
@@ -34,31 +33,12 @@ if (!process.env.clientID)
     throw new Error("Client ID  is not defined.");
 
 const channleAnouments = process.env.channleID;
-const clientID = process.env.clientID;
-
-const rest = new REST().setToken(process.env.discordToken);
-const commands: Command[] = [command];
-const commandsArray = commands.map((command) => command.data.toJSON());
-
-(async () => {
-    try {
-        console.log('Started refreshing application (/) commands.');
-
-        await rest.put(Routes.applicationCommands(clientID), {
-            body: commandsArray,
-        });
-        console.log('Successfully reloaded application (/) commands.');
-    } catch (error) {
-        console.error(error);
-    }
-})();
 
 
+const commands: Command[] = [releaseCommand];
+await register(commands);
 
-client.on('ready', () => {
-    console.log(`Logged in as ${client.user?.tag}`);
-    client.user?.setActivity('Reading data for calendar release books')
-});
+
 
 client.on(Events.InteractionCreate, async (interaction) => {
     if (
@@ -113,4 +93,8 @@ Cron(
     },
 );
 
+client.on('ready', () => {
+    console.log(`Logged in as ${client.user?.tag}`);
+    client.user?.setActivity('Reading data for calendar release books')
+});
 client.login(process.env.discordToken || 'Your Token');
