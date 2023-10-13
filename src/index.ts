@@ -79,6 +79,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
     }
 });
 
+
+
+client.on('ready', () => {
+    console.log(`Logged in as ${client.user?.tag}`);
+    client.user?.setActivity('Reading data for calendar release books')
+});
+client.login(process.env.discordToken || 'Your Token');
 Cron(
     "0 6 * * *",
     {
@@ -92,9 +99,3 @@ Cron(
         if (channel) channel.send({ embeds: [response.embed] });
     },
 );
-
-client.on('ready', () => {
-    console.log(`Logged in as ${client.user?.tag}`);
-    client.user?.setActivity('Reading data for calendar release books')
-});
-client.login(process.env.discordToken || 'Your Token');
